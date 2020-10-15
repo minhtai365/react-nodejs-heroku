@@ -278,6 +278,18 @@ text-align: center;
     .res-nav{
         display: block;
     }
+    .img-zoom{
+        height: 40% !important;
+    }
+    .body-cart{
+        font-size: 0.7rem;
+    }
+    .card-slick{
+        height: 200px !important;
+    }
+    .slick-st{
+        height: 230px !important;
+    }
     .nav-link {
         text-align: right;
         /* padding-right:10px !important; */
