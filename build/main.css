@@ -198,7 +198,7 @@ text-align: center;
     }
     
     .content-chitiet{
-        padding-top:180px;
+        padding-top:160px;
     }
     .list-sub{
         margin:0 !important
@@ -274,9 +274,28 @@ text-align: center;
 .res-nav{
     display: none;
 }
+.content-sea{
+    padding-top: 0.25rem !important;
+}
 @media (max-width: 480px) {
+    .corou-my img{
+        height: 180px !important;
+    }
+    .content-sea{
+        text-align: center !important;
+        flex-grow: 1 !important;
+        
+    padding-bottom: 0.25rem !important;
+    }
+    .h-10 img{
+        height: 80px;
+    }
     .res-nav{
         display: block;
+    }
+    .logo{
+        border: none;
+        padding-bottom: 1rem;
     }
     .img-zoom{
         height: 40% !important;
