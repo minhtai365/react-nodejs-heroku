@@ -10,6 +10,11 @@ router.get('/', (req, res, next) => {
       res.send(dt)
     })
   })
+  router.post('/', (req, res, next) => {
+    Cart.find({userid:req.body.id})
+    .then(ress=>res.status(200).send(ress[0]));
+    
+  })
   //thêm
   router.post('/add', (req, res, next) => {
     var item = {
@@ -125,10 +130,9 @@ router.get('/', (req, res, next) => {
   router.post('/remove', (req, res, next) => {
     var proid = req.body.id;
     var userid = req.body.userid;
-    Cart.updateOne({ 'item.productid': proid, userid: userid }, { $pull: { item: { productid: proid } } })
+    Cart.updateOne({userid: userid }, { $pull: { item: { productid: proid } } })
       .then(ress => {
-      })
-      .catch(e => {
+        res.status(200).json({mess:'ok'})
       })
   })
   // end cart/////////////////////////////////////////

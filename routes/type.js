@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
         }
       ])
         .then(ress => {
-          res.status(200).json('edit ok');
+          res.send('edit ok');
         })
         .catch(err => {
           res.send(err);
@@ -35,10 +35,10 @@ router.get('/', (req, res, next) => {
         createdlc: nowlc
       })
         .then(cre => {
-          res.status(200).json('create ok');
+          res.send('create ok');
         })
         .catch(err => {
-          res.status(200).json('fail');
+          res.send('fail');
         });
     }
   });

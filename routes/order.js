@@ -25,8 +25,11 @@ router.get('/', (req, res, next) => {
     }
   })
 })
-  Order.find({}).sort('-date').exec((err, dt) => {
-    res.send(dt);
+
+})
+router.post('/', (req, res, next) => {
+  Order.find({userid:req.body.id}).sort('-date').then(re=>{
+    res.status(200).send(re);
   })
 })
 router.post('/cancel', (req, res) => {
@@ -44,7 +47,9 @@ router.post('/cancel', (req, res) => {
       req.body.item.map(x => {
         Product.updateOne({ _id: x.productid }, { $inc: { proNumber: + x.qty } })
           .then(ress => {
-            res.status(200).json({ mess: 'ok' })
+            Order.find({userid:req.body.userid}).sort('-date').then(re=>{
+              res.status(200).send(re);
+            })
           })
       })
     })

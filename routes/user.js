@@ -16,6 +16,13 @@ router.get('/', function (req, res, next) {
     res.send(dt);
   })
 })
+router.post('/', function (req, res, next) {
+  User.find({_id:req.body.id})
+  .then(ress=>res.status(200).send(ress[0]))
+  // .exec((err, dt) => {
+  //   res.send(dt);
+  // })
+})
 //khóa user
 router.post('/change', (req, res, next) => {
   User.findOne({ _id: req.body.id })
@@ -41,6 +48,7 @@ router.post('/change', (req, res, next) => {
 })
 //set info user
 router.post('/setinfo', (req, res, next) => {
+  console.log(req.body);
   const { id, phone, cmnd, address, quan, tp } = req.body;
   User.updateOne({ _id: id }, [
     {
@@ -98,12 +106,10 @@ router.post('/register', (req, res) => {
 })
 router.post('/login', function (req, res, next) {
   var username = req.body.username, password = req.body.password;
-  console.log(password);
   User.findOne({
     $or: [{ email: username }, { username: username }]
   })
     .then(user => {
-      console.log(user);
       if (user) {
         if (bcrypt.compareSync(password, user.password)) {
           res.send(user);
@@ -122,14 +128,13 @@ router.post('/getpass', function (req, res, next) {
   var email = req.body.email
   // console.log(email);
   const token = crypto.randomBytes(3).toString('hex');
-  console.log(token);
   User.updateOne({ email:email }, [{
     $set: {
       "passtoken": token
     }
   }])
   .then(res=>{
-    console.log(res);
+    res.status(200).send('ok');
   })
 
   const transporter = nodemailer.createTransport({
@@ -149,10 +154,7 @@ router.post('/getpass', function (req, res, next) {
   }
   transporter.sendMail(mainOptions, function (err, info) {
     if (err) {
-      console.log('Looix' + err);
-      // res.redirect('/');
     } else {
-      console.log('Message sent: ' + info.response);
       res.redirect('/');
     }
   });
@@ -182,7 +184,6 @@ router.post('/resetpass', function (req, res, next) {
 })
 router.post('/changepass',(req,res)=>{
   const {pass,newpass,id}=req.body;
-  console.log(newpass);
   User.findOne({_id:id})
   .exec((err,user)=>{
     if(!err && user){
