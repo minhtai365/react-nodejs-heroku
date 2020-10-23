@@ -278,6 +278,9 @@ text-align: center;
     padding-top: 0.25rem !important;
 }
 @media (max-width: 480px) {
+    .content-chitiet{
+        padding-top: 100px !important;
+    }
     .corou-my img{
         height: 180px !important;
     }
