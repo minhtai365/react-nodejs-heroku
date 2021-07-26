@@ -17,8 +17,8 @@ router.get('/', function (req, res, next) {
   })
 })
 router.post('/', function (req, res, next) {
-  User.find({_id:req.body.id})
-  .then(ress=>res.status(200).send(ress[0]))
+  User.find({ _id: req.body.id })
+    .then(ress => res.status(200).send(ress[0]))
   // .exec((err, dt) => {
   //   res.send(dt);
   // })
@@ -126,16 +126,17 @@ router.post('/login', function (req, res, next) {
 })
 router.post('/getpass', function (req, res, next) {
   var email = req.body.email
-  // console.log(email);
+  console.log(email);
   const token = crypto.randomBytes(3).toString('hex');
-  User.updateOne({ email:email }, [{
+  User.updateOne({ email: email }, [{
     $set: {
       "passtoken": token
     }
   }])
-  .then(res=>{
-    res.status(200).send('ok');
-  })
+    .then(res => {
+      console.log(res);
+      // res.status(200).send('ok');
+    })
 
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -161,47 +162,53 @@ router.post('/getpass', function (req, res, next) {
 })
 router.post('/resetpass', function (req, res, next) {
   var email = req.body.email;
-  var token=req.body.token;
-  User.findOne({ email:email,passtoken:token})
-  .exec((err,user)=>{
-    if(!err&&user){
-      user.password=bcrypt.hashSync(token,10);
-      user.save(err=>{
-        if(err)
-        res.status(400).json({mess:'Lỗi'})
-        else{
-          res.status(200).json({mess:'Thành công'})
-        }
-      })
+  var token = req.body.token;
+  User.updateOne({ email: email, passtoken: token }, [{
+    $set: {
+      'password': bcrypt.hashSync(token, 10)
     }
-    else{
-      res.status(400).json({mess:'Lỗi'})
-    }
+  }]).then(re => {
+    res.status(200).json({ mess: 'Thành công' })
   })
-  .catch(re=>{
-    res.status(400).json({mess:'Lỗi'})
-  })
+    // .exec((err, user) => {
+    //   if (!err && user) {
+    //     user.password = bcrypt.hashSync(token, 10);
+    //     user.save(errr => {
+    //       if (errr)
+    //         res.status(400).json({ mess: 'Lỗi' })
+    //       else {
+    //         res.status(200).json({ mess: 'Thành công' })
+    //       }
+    //     })
+    //   }
+    //   else {
+    //     res.status(400).json({ mess: 'Lỗi' })
+    //   }
+    // })
+    .catch(re => {
+      res.status(400).json({ mess: 'Lỗi' })
+    })
 })
-router.post('/changepass',(req,res)=>{
-  const {pass,newpass,id}=req.body;
-  User.findOne({_id:id})
-  .exec((err,user)=>{
-    if(!err && user){
-      if (bcrypt.compareSync(pass, user.password)) {
-        user.password=bcrypt.hashSync(newpass,10);
-        user.save(err=>{
-          if(err)
-          res.status(400).json({mess:'Lỗi'})
-          else{
-            res.status(200).json({mess:'Thành công'})
-          }
-        })
+router.post('/changepass', (req, res) => {
+  const { pass, newpass, id } = req.body;
+  User.findOne({ _id: id })
+    .exec((err, user) => {
+      if (!err && user) {
+        if (bcrypt.compareSync(pass, user.password)) {
+          user.password = bcrypt.hashSync(newpass, 10);
+          user.save(err => {
+            if (err)
+              res.status(400).json({ mess: 'Lỗi' })
+            else {
+              res.status(200).json({ mess: 'Thành công' })
+            }
+          })
+        }
+        else {
+          res.status(400).json({ mess: 'Mật khẩu không đúng' })
+        }
       }
-      else{
-    res.status(400).json({mess:'Mật khẩu không đúng'})
-      }
-    }
-  })
+    })
 
 })
 //end user//////////////////////////////////////////////////////////////////////////
